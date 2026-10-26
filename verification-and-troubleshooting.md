@@ -1,38 +1,88 @@
-# Verification and Troubleshooting Notes
+# Verification and Troubleshooting
 
-I kept these notes while building and checking the capstone. They record the tests performed and separate confirmed results from limitations that would benefit from further validation.
+This page uses the screenshots from my Packet Tracer project as evidence. Each image appears next to the result it supports, with notes about what the screenshot proves and what it does not prove.
 
-## Verification summary
+## 1. OSPF neighbor between HQ and branch
 
-| Feature | Evidence / test | Status |
-|---|---|---|
-| R1–R2 OSPF | R2 `show ip ospf neighbor` showed neighbor ID `1.1.1.1`, state `FULL/BDR`, neighbor address `10.0.12.1`, interface `GigabitEthernet0/1` | Verified — CLI screenshot reviewed |
-| Internal routes | R2 `show ip route` showed OSPF routes for HQ Users (`192.168.10.0/24`), HQ Admin (`192.168.20.0/24`), HQ Management (`192.168.99.0/24`), and HQ Services (`192.168.100.0/24`), all via `10.0.12.1`; Branch Staff and Guest networks are directly connected | Verified — CLI screenshot reviewed |
-| Default route | R2 showed gateway of last resort `10.0.12.1` and `O*E2 0.0.0.0/0 [110/1]` via `10.0.12.1` | Verified — CLI screenshot reviewed |
-| R1 to ISP | R3 pinged `198.51.100.2` successfully | Verified |
-| Public server network | R3 pinged `203.0.113.10` successfully | Verified |
-| NAT/PAT | R1 `show ip nat translations` screenshot showed TCP `192.168.40.10:1025` translated to `198.51.100.2:1025` for `203.0.113.10:80` | Verified for Branch Guest — CLI screenshot reviewed |
-| DNS/HTTP | `http://www.test.net` loaded from a client during testing | Verified for tested client |
-| Guest ACL placement | R2 `show ip interface g0/0.40` showed the interface up/up, helper address `192.168.100.10`, and `Inbound access list is guest` | Verified — interface CLI screenshot reviewed |
-| Guest ACL policy | R2 `show access-lists guest` screenshot showed DHCP, DNS, and public HTTP permit entries, denies for HQ Admin and management subnets, and a final `deny ip any any`; DHCP permit showed 5 matches | ACL configuration reviewed; the capture does not show an HTTP-rule hit count. Allowed/blocked end-to-end tests were previously reported by the user |
-| LACP | SW1-HQ `show etherchannel summary` showed `Po1(SU)`, protocol `LACP`, and member ports `Fa0/23(P)` and `Fa0/24(P)` | Verified — CLI screenshot reviewed |
-| HQ STP | SW1-HQ `show spanning-tree vlan 99` showed matching Root ID and Bridge ID and stated `This bridge is the root`; Gi0/1, Gi0/2, and Po1 were listed as designated forwarding | Verified for VLAN 99 — CLI screenshot reviewed; this output does not show the blocked port on a neighboring switch |
-| Switch management SVIs | SW1 `192.168.99.2`, SW2 `192.168.99.3`, SW3 `192.168.199.2` reached `up/up` | Verified |
-| SSH access to R2 | PC-HQ-ADMIN successfully logged in to `10.0.12.2` and reached `R2>`; PC-HQ-USER received `Connection refused by remote host` for the same SSH destination | Verified for both tested source PCs — screenshots reviewed |
-| SSH source restriction | R2 accepted PC-HQ-ADMIN and refused PC-HQ-USER at `10.0.12.2` | Behavior supported on R2 for the two tested sources; equivalent source tests on other devices remain unverified |
-| NTP | Devices pointed to `192.168.100.10`; several showed it as `* sys.peer` | Server association observed; precise time synchronization is unconfirmed because of unusual Packet Tracer offsets |
+The branch router has an established OSPF adjacency with the HQ router. In the screenshot below, neighbor ID `1.1.1.1` is in `FULL/BDR` state, with neighbor address `10.0.12.1` on `GigabitEthernet0/1`. The `FULL` state shows that the routers have completed adjacency formation.
+
+![R2-BRANCH OSPF neighbor output showing neighbor 1.1.1.1 in FULL/BDR state](screenshots/OSPF_NEIGHBOR.png)
+
+## 2. HQ routes and the default route learned through OSPF
+
+The branch routing table shows HQ Users (`192.168.10.0/24`), HQ Admin (`192.168.20.0/24`), HQ Management (`192.168.99.0/24`), and HQ Services (`192.168.100.0/24`) as OSPF-learned routes through `10.0.12.1`. Branch Staff (`192.168.30.0/24`) and Branch Guest (`192.168.40.0/24`) are directly connected to R2.
+
+The same output identifies `10.0.12.1` as the gateway of last resort and displays the OSPF external default route `O*E2 0.0.0.0/0 [110/1]` through that next hop.
+
+![R2-BRANCH routing table showing HQ routes and the OSPF external default route](screenshots/IP_ROUTE.png)
+
+## 3. NAT/PAT for Branch Guest traffic
+
+The NAT translation screenshot records a TCP session from Branch Guest host `192.168.40.10:1025`. Its inside-global address is `198.51.100.2:1025`, and the destination is the public web server `203.0.113.10:80`. This is direct evidence that the tested Guest HTTP session was translated by PAT.
+
+![R1-HQ NAT translation for Branch Guest HTTP traffic to PUBLIC-WEB](screenshots/NAT_translation.png)
+
+The client-side screenshot shows `http://www.test.net` in the browser address bar and the page loaded in Packet Tracer. Together with the NAT entry, this demonstrates successful web access for this test. It does not, by itself, prove PAT was tested from each of the other client VLANs.
+
+![Branch Guest browser displaying the page at http://www.test.net](screenshots/test_net.png)
+
+## 4. Guest VLAN ACL rules and interface placement
+
+The ACL output shows the intended Guest policy: permit DHCP, permit ICMP to the Guest gateway, permit UDP and TCP DNS queries to the HQ server `192.168.100.10`, and permit HTTP to the public server `203.0.113.10`. It then denies traffic to HQ Admin (`192.168.20.0/24`), HQ Management (`192.168.99.0/24`), and Branch Management (`192.168.199.0/24`), followed by a final deny for all other IP traffic.
+
+The DHCP permit line displays five matches in this capture. An HTTP-rule hit count is not visible here, so this screenshot proves the configured rule set, not an HTTP ACL counter.
+
+![R2-BRANCH Guest ACL entries including permitted DHCP DNS and HTTP plus restricted networks](screenshots/Access-list.png)
+
+The interface output separately confirms that `GigabitEthernet0/0.40` is up/up, uses helper address `192.168.100.10`, and has `guest` listed as its inbound access list. This verifies that the ACL is attached to the Guest subinterface rather than only existing in the configuration.
+
+![R2-BRANCH Guest subinterface showing guest as the inbound access list](screenshots/R2_int_g0_0.40.png)
+
+The browser test above demonstrates that the public web page loaded from the Guest PC. The ACL screenshot does not show an attempted blocked connection; blocked-access results were reported during lab testing, but are not depicted in these screenshots.
+
+## 5. LACP EtherChannel between the HQ switches
+
+The switch output shows port-channel `Po1(SU)` using LACP. Both `Fa0/23(P)` and `Fa0/24(P)` are bundled members. This confirms the EtherChannel is in use and both physical links have joined the port-channel.
+
+![SW1-HQ EtherChannel summary showing Po1 in use with both LACP member links bundled](screenshots/sw1%20etherchannel.png)
+
+## 6. STP root bridge for VLAN 99
+
+SW1-HQ's spanning-tree output shows the Root ID and Bridge ID matching and explicitly states `This bridge is the root`. Its listed interfaces `Gi0/1`, `Gi0/2`, and `Po1` are designated and forwarding for VLAN 99.
+
+This confirms SW1-HQ is the root bridge for VLAN 99. The screenshot is from SW1 itself, so it does not show which port, if any, is blocked on the neighboring switch.
+
+![SW1-HQ spanning-tree output identifying SW1 as root for VLAN 99](screenshots/STP_vlan99_sw1.png)
+
+## 7. SSH management source restriction on R2
+
+The authorized test from PC-HQ-ADMIN connects to R2 at `10.0.12.2`. After authentication, the prompt changes to `R2>`, showing that the session succeeded.
+
+![PC-HQ-ADMIN successfully opening an SSH session to R2](screenshots/HQ_admin_ssh.png)
+
+The same SSH destination was then tested from PC-HQ-USER. Its terminal shows `Connection refused by remote host` on both attempts. Combined with the successful Admin session, this supports the intended SSH source restriction on R2 for these two tested sources.
+
+![PC-HQ-USER receiving Connection refused by remote host when attempting SSH to R2](screenshots/HQ_User_ssh.png)
+
+This is evidence for R2 and these two source PCs only; equivalent authorized and unauthorized tests have not been captured for every other network device.
+
+## Other verification notes
+
+- The lab work also included successful reachability tests from the ISP router to R1's outside address and to the public server, as well as switch management SVI recovery after trunk and VLAN corrections.
+- SSHv2 and local authentication were configured on the tested devices. The screenshots above focus on the successful and refused source tests on R2.
+- Several devices selected `192.168.100.10` as their NTP peer, but some Packet Tracer offsets were unusually large. Accurate clock synchronization is not confirmed.
 
 ## Troubleshooting notes
 
 ### Native VLAN mismatch between SW1 and SW2
 
-**Symptom:** STP reported `PVID_Inc`, and the Port-channel was blocked for VLAN 99.
+**Symptom:** STP reported a PVID inconsistency and VLAN 99 was blocked on the port-channel.
 
-**Cause:** SW1 and SW2 initially used different native VLANs and incomplete allowed-VLAN lists.
+**Cause:** The native VLAN and allowed-VLAN lists did not match on both ends of the HQ trunks.
 
-**Fix:** Both ends were configured to use native VLAN 999 and allow VLANs 10, 20, 99, 100, and 999. VLAN 999 was also created in the VLAN database.
+**Fix:** Both ends were configured to use native VLAN 999 and matching allowed VLANs. VLAN 999 was also created in the VLAN database.
 
-**Verification:** The `PVID_Inc` condition cleared. LACP remained up, and STP handled the redundant path without creating a loop.
+**Verification:** The inconsistency cleared, LACP remained up, and STP handled the redundant Layer 2 design. The STP screenshot above verifies SW1's root status for VLAN 99; the neighboring switch would need to be inspected to show the exact blocking port.
 
 ### SW1/SW2 management SVI down
 
@@ -40,17 +90,15 @@ I kept these notes while building and checking the capstone. They record the tes
 
 **Checks:** VLAN 99 existence, trunk native VLAN, trunk allowed VLANs, STP state, and CDP neighbors were inspected.
 
-**Fix and recovery:** After correcting VLAN/trunk settings, SW2's VLAN 99 SVI was shut down and re-enabled. It returned to `up/up`; ping to its gateway and to SW1's management address then succeeded.
+**Fix and recovery:** After correcting VLAN/trunk settings, SW2's VLAN 99 SVI was shut down and re-enabled. It returned to `up/up`; ping to its gateway and SW1's management address then succeeded.
 
-### R2 SSH connection failed
+### R2 SSH connection failed during setup
 
-**Symptom:** SSH to R2's transit address `10.0.12.2` failed while other tested devices were reachable.
+**Symptom:** SSH to R2's transit address `10.0.12.2` initially failed.
 
-**Cause:** R2's VTY lines were not consistently configured for local authentication and SSH-only transport.
+**Cause and fix:** The VTY lines were not consistently configured for local authentication and SSH-only transport. VTY lines 0–15 were configured with `login local` and `transport input ssh`, and SSHv2 was enabled.
 
-**Fix:** VTY lines 0–15 were configured with `login local` and `transport input ssh`, and SSHv2 was enabled.
-
-**Verification:** `show ip ssh` reported version 2.0, and the Admin PC successfully connected to `10.0.12.2`. In a separate source-restriction test, PC-HQ-ADMIN reached the R2 prompt, while PC-HQ-USER's attempt to the same address returned `Connection refused by remote host`.
+**Verification:** The two screenshots in the SSH section now show the successful authorized session and the refused user-PC connection.
 
 ### NAT/PAT source scope
 
@@ -58,21 +106,10 @@ I kept these notes while building and checking the capstone. They record the tes
 
 **Fix:** The standard ACL was narrowed to the four client subnets: `192.168.10.0/24`, `192.168.20.0/24`, `192.168.30.0/24`, and `192.168.40.0/24`.
 
-**Verification:** The NAT table showed a translation for Branch Guest HTTP traffic. Each of the other client VLANs should be tested separately to confirm its translation after the ACL change.
+**Verification:** The NAT screenshot demonstrates translation for Branch Guest HTTP traffic. Each of the other client VLANs should be tested separately to confirm its translation.
 
-## NTP caveat
+## Remaining limitations
 
-The switches were pointed to `192.168.100.10`. Several devices displayed the server as `* sys.peer`, but some Packet Tracer outputs showed an unusually large offset. I’ve recorded the server association as observed, but I’m not claiming accurate clock synchronization on every device until the offset is understood or Packet Tracer’s behavior is confirmed.
+The evidence here confirms the specific tests illustrated by the screenshots. Further validation could include PAT tests from HQ Users, HQ Admin, and Branch Staff; an explicit screenshot of blocked Guest access; the blocking port on the neighboring switch for VLAN 99; SSH allow/deny tests on the remaining devices; and a stable NTP synchronization result.
 
-## Optional supporting evidence
-
-The core deliverables are included in the repository: the [Packet Tracer file](ccna-mega-capstone.pkt), [topology screenshot](screenshots/topology.png), addressing plan, and this troubleshooting record. The following evidence would be useful if I want to expand the portfolio further, but it is not a prerequisite for using or understanding the project:
-
-- `show ip ospf neighbor` and `show ip route` from R1/R2
-- Additional NAT/PAT tests for HQ Users, HQ Admin, and Branch Staff (Branch Guest translation is now evidenced by a reviewed CLI screenshot)
-- A Guest PC screenshot showing public HTTP succeeds and protected internal access is blocked; the CLI ACL screenshot documents the configured rules, but not the HTTP-rule hit count
-- STP output from SW2-HQ or the neighboring switch to document which redundant link is blocking for VLAN 99
-- Repeat SSH allow/deny tests on the remaining network devices; R2 has been tested from PC-HQ-ADMIN and PC-HQ-USER
-- NTP association output after allowing time to synchronize
-
-Any added screenshots should come from the included `ccna-mega-capstone.pkt` file so they match this project.
+The complete Packet Tracer file is [`ccna-mega-capstone.pkt`](ccna-mega-capstone.pkt). Repeat tests from that file so the outputs match the documented project.
