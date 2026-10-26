@@ -11,10 +11,10 @@ I kept these notes while building and checking the capstone. They record the tes
 | Default route | R2 showed gateway of last resort `10.0.12.1` and `O*E2 0.0.0.0/0 [110/1]` via `10.0.12.1` | Verified — CLI screenshot reviewed |
 | R1 to ISP | R3 pinged `198.51.100.2` successfully | Verified |
 | Public server network | R3 pinged `203.0.113.10` successfully | Verified |
-| NAT/PAT | R1 translation showed `192.168.40.10` translated to `198.51.100.2` for HTTP to `203.0.113.10:80` | Verified for Branch Guest |
+| NAT/PAT | R1 `show ip nat translations` screenshot showed TCP `192.168.40.10:1025` translated to `198.51.100.2:1025` for `203.0.113.10:80` | Verified for Branch Guest — CLI screenshot reviewed |
 | DNS/HTTP | `http://www.test.net` loaded from a client during testing | Verified for tested client |
-| Guest ACL placement | `guest` applied inbound to R2 `G0/0.40` | Verified |
-| Guest ACL policy | User confirmed the allowed and blocked traffic tests passed | Passed in the reported lab tests; screenshots are optional supporting evidence |
+| Guest ACL placement | `guest` ACL is configured inbound on R2 `G0/0.40`; the reviewed `show access-lists guest` capture displays its rule set | Verified configuration; this output alone does not display the interface attachment |
+| Guest ACL policy | R2 `show access-lists guest` screenshot showed DHCP, DNS, and public HTTP permit entries, denies for HQ Admin and management subnets, and a final `deny ip any any`; DHCP permit showed 5 matches | ACL configuration reviewed; the capture does not show an HTTP-rule hit count. Allowed/blocked end-to-end tests were previously reported by the user |
 | LACP | `show etherchannel summary` showed `Po1(SU)` and Fa0/23 and Fa0/24 bundled | Verified |
 | HQ STP | SW1 was root for HQ VLANs; redundant path blocked where appropriate | Verified |
 | Switch management SVIs | SW1 `192.168.99.2`, SW2 `192.168.99.3`, SW3 `192.168.199.2` reached `up/up` | Verified |
@@ -69,8 +69,8 @@ The switches were pointed to `192.168.100.10`. Several devices displayed the ser
 The core deliverables are included in the repository: the [Packet Tracer file](ccna-mega-capstone.pkt), [topology screenshot](screenshots/topology.png), addressing plan, and this troubleshooting record. The following evidence would be useful if I want to expand the portfolio further, but it is not a prerequisite for using or understanding the project:
 
 - `show ip ospf neighbor` and `show ip route` from R1/R2
-- `show ip nat translations` during a public website test
-- Guest PC results showing public HTTP access succeeds and protected internal access is blocked
+- Additional NAT/PAT tests for HQ Users, HQ Admin, and Branch Staff (Branch Guest translation is now evidenced by a reviewed CLI screenshot)
+- A Guest PC screenshot showing public HTTP succeeds and protected internal access is blocked; the CLI ACL screenshot documents the configured rules, but not the HTTP-rule hit count
 - `show etherchannel summary` and `show spanning-tree vlan 99`
 - SSH tests from an authorized source and an unauthorized source
 - NTP association output after allowing time to synchronize
