@@ -1,7 +1,15 @@
 # Project Screenshots
 
-The topology image for this capstone is included as [`topology.png`](topology.png).
+The topology diagram is included here: [`topology.png`](topology.png).
 
-This directory can also hold optional evidence screenshots if I expand the portfolio later. Useful examples include OSPF and route output, NAT/PAT translations, Guest ACL test results, EtherChannel/STP status, SSH access tests, and NTP association output. These are supporting examples, not a checklist required to consider the current project documented.
+## CLI evidence record
 
-When adding evidence, I’ll capture it from the included [`ccna-mega-capstone.pkt`](../ccna-mega-capstone.pkt) file and avoid exposing passwords, secret hashes, or other sensitive details.
+The CLI screenshots reviewed during the capstone were used to update the verification record. The confirmed results are documented in [`verification-and-troubleshooting.md`](../verification-and-troubleshooting.md), including:
+
+- R2-BRANCH OSPF neighbor state, learned HQ routes, and OSPF-learned default route
+- R1-HQ NAT/PAT translation for Branch Guest HTTP traffic
+- R2-BRANCH Guest ACL rules and inbound attachment to `GigabitEthernet0/0.40`
+- SW1-HQ LACP EtherChannel status and STP root status for VLAN 99
+- SSH success from PC-HQ-ADMIN and refusal from PC-HQ-USER
+
+The repository currently stores the topology image as a separate image file; the additional CLI captures are represented by their verified findings in the documentation rather than committed as individual image files. The verification notes distinguish directly reviewed output from tests previously reported and from checks that remain unverified.
