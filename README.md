@@ -145,7 +145,7 @@ What I observed during the lab:
 - The switch management SVIs reached `up/up` and could ping their gateways.
 - SSH to R2 worked from the HQ Admin PC after its VTY settings were corrected.
 
-Some items still need better evidence before I call them fully verified across all devices. In particular, I still need screenshots of the SSH allowed/denied tests and more reliable confirmation of NTP synchronization. Packet Tracer displayed SRV-HQ as the selected NTP peer on several devices, but some reported offsets were unusually large.
+The core lab has been built and the main connectivity tests described above were performed. I’m keeping two technical caveats clear rather than overstating the results: the SSH connection to R2 was tested successfully, but the SSH source restriction was not tested from both allowed and unauthorized clients on every device; and although several devices selected SRV-HQ as their NTP peer, some Packet Tracer offsets were unusually large, so accurate time synchronization is not confirmed. These are optional follow-up validation items, not missing project files.
 
 ## Troubleshooting Notes
 
@@ -191,7 +191,7 @@ The Packet Tracer lab file is included in this repository: **[`ccna-mega-capston
 
 The topology screenshot is saved in [`screenshots/topology.png`](screenshots/topology.png), and the [IP Addressing Plan](addressing-plan.md) and [Verification and Troubleshooting](verification-and-troubleshooting.md) pages document the design and the checks performed.
 
-The main project materials are now in place: the Packet Tracer file, topology image, README, addressing plan, and troubleshooting notes. Separate sanitized configuration snapshots and extra CLI evidence screenshots have not been added yet. Those would make the portfolio stronger, but the core lab and documentation are available now.
+The core project package is complete: the Packet Tracer file, topology image, README, addressing plan, and troubleshooting notes are all included. Separate sanitized configuration snapshots and additional CLI screenshots are optional supporting materials; they are not required to understand the design or open the lab.
 
 ## What I Learned
 
@@ -199,9 +199,9 @@ This project helped me connect topics that felt separate when I first studied th
 
 The most useful habit was troubleshooting one layer at a time: checking the interface and VLAN state, confirming routes and next hops, looking at NAT translations, then testing the actual service from a client.
 
-## Next Steps
+## Optional Improvements
 
-The core project is uploaded. My next improvement is to add a few focused pieces of evidence: the SSH management restriction working from an allowed source and failing from an unauthorized source, and a clearer NTP association check. I’ll keep the NTP limitation documented until the unusually large Packet Tracer offsets are understood.
+If I expand the portfolio later, useful additions would be screenshots showing the SSH management restriction from both allowed and unauthorized sources, plus a clearer NTP association check. The current NTP caveat will remain documented unless the unusually large Packet Tracer offsets can be explained.
 
 ## Author
 
