@@ -82,7 +82,7 @@ DHCP pools provide addresses for HQ Users, HQ Admin, Branch Staff, and Branch Gu
 
 ## Security — Guest VLAN ACL
 
-The extended ACL named `guest` is applied inbound on R2-BRANCH `G0/0.40`.
+R2-BRANCH's `show ip interface g0/0.40` output confirms that `GigabitEthernet0/0.40` is up/up, has helper address `192.168.100.10`, and lists `guest` as the inbound access list.
 
 | Traffic | Policy |
 |---|---|
