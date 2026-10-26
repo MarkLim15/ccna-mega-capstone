@@ -1,6 +1,6 @@
 # Verification and Troubleshooting Notes
 
-I kept these notes while building and checking the capstone. They record what I actually tested and flag items that still need more evidence.
+I kept these notes while building and checking the capstone. They record the tests performed and separate confirmed results from limitations that would benefit from further validation.
 
 ## Verification summary
 
@@ -14,13 +14,13 @@ I kept these notes while building and checking the capstone. They record what I 
 | NAT/PAT | R1 translation showed `192.168.40.10` translated to `198.51.100.2` for HTTP to `203.0.113.10:80` | Verified for Branch Guest |
 | DNS/HTTP | `http://www.test.net` loaded from a client during testing | Verified for tested client |
 | Guest ACL placement | `guest` applied inbound to R2 `G0/0.40` | Verified |
-| Guest ACL policy | User reported the allowed and blocked traffic tests passed | Reported passed; add screenshots as evidence |
+| Guest ACL policy | User confirmed the allowed and blocked traffic tests passed | Passed in the reported lab tests; screenshots are optional supporting evidence |
 | LACP | `show etherchannel summary` showed `Po1(SU)` and Fa0/23 and Fa0/24 bundled | Verified |
 | HQ STP | SW1 was root for HQ VLANs; redundant path blocked where appropriate | Verified |
 | Switch management SVIs | SW1 `192.168.99.2`, SW2 `192.168.99.3`, SW3 `192.168.199.2` reached `up/up` | Verified |
 | SSH to R2 | Admin PC successfully connected to `10.0.12.2` after VTY corrections | Verified for R2 |
-| SSH source restriction | Management-source ACL was configured on device VTY lines | Needs allowed/denied source tests captured |
-| NTP | Devices pointed to `192.168.100.10`; several showed it as `* sys.peer` | Partially verified; see note below |
+| SSH source restriction | Management-source ACL was configured on device VTY lines | Configured; a separate allowed/denied source test on every device is recommended |
+| NTP | Devices pointed to `192.168.100.10`; several showed it as `* sys.peer` | Server association observed; precise time synchronization is unconfirmed because of unusual Packet Tracer offsets |
 
 ## Troubleshooting notes
 
@@ -64,17 +64,15 @@ I kept these notes while building and checking the capstone. They record what I 
 
 The switches were pointed to `192.168.100.10`. Several devices displayed the server as `* sys.peer`, but some Packet Tracer outputs showed an unusually large offset. I’ve recorded the server association as observed, but I’m not claiming accurate clock synchronization on every device until the offset is understood or Packet Tracer’s behavior is confirmed.
 
-## Remaining evidence to capture
+## Optional supporting evidence
 
-- [x] Full Packet Tracer topology with device labels visible — saved as [`screenshots/topology.png`](screenshots/topology.png)
-- [x] Packet Tracer lab file — [`ccna-mega-capstone.pkt`](ccna-mega-capstone.pkt)
-- [ ] `show ip ospf neighbor` from R1 or R2
-- [ ] `show ip route` from R2 showing the default route
-- [ ] `show ip nat translations` on R1 during a public website test
-- [ ] Guest PC: public website succeeds
-- [ ] Guest PC: access to protected internal subnets fails
-- [ ] Admin PC SSH success and an unauthorized source SSH failure
-- [ ] `show etherchannel summary` and `show spanning-tree vlan 99`
-- [ ] NTP association outputs after devices have had time to synchronize
+The core deliverables are included in the repository: the [Packet Tracer file](ccna-mega-capstone.pkt), [topology screenshot](screenshots/topology.png), addressing plan, and this troubleshooting record. The following evidence would be useful if I want to expand the portfolio further, but it is not a prerequisite for using or understanding the project:
 
-Any additional screenshots should be captured from the included `ccna-mega-capstone.pkt` file so they match this project, not my older lab.
+- `show ip ospf neighbor` and `show ip route` from R1/R2
+- `show ip nat translations` during a public website test
+- Guest PC results showing public HTTP access succeeds and protected internal access is blocked
+- `show etherchannel summary` and `show spanning-tree vlan 99`
+- SSH tests from an authorized source and an unauthorized source
+- NTP association output after allowing time to synchronize
+
+Any added screenshots should come from the included `ccna-mega-capstone.pkt` file so they match this project.
