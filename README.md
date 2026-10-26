@@ -33,7 +33,9 @@ The lab has a headquarters network, a branch network, and a simulated ISP. I als
 
 ## Network overview
 
-> **Topology image pending:** I still need to capture a screenshot of the completed Packet Tracer topology. I’ll add it here once it’s ready, and keep it separate from screenshots belonging to my older enterprise-network project.
+![Completed Cisco Packet Tracer topology](screenshots/topology.webp)
+
+*Topology screenshot captured from the current capstone lab.*
 
 R1 connects to R2 over `10.0.12.0/30`. R1 connects to R3 over `198.51.100.0/30`. R3 provides the simulated public network `203.0.113.0/24`, which contains PUBLIC-WEB at `203.0.113.10`.
 
