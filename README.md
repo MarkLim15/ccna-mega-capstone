@@ -6,7 +6,7 @@ The design connects a headquarters LAN, a branch LAN, and a simulated ISP. It br
 
 ## Network Topology
 
-![CCNA Mega Capstone topology](screenshots/topology.webp)
+![CCNA Mega Capstone topology](screenshots/topology.png)
 
 The diagram shows the main devices, VLANs, the HQ-to-branch connection, the ISP link, and the simulated public web server. The image is from the topology screenshot uploaded for this capstone.
 
@@ -187,7 +187,7 @@ More detail is available in [Verification and Troubleshooting](verification-and-
 
 ## Packet Tracer File and Project Evidence
 
-The topology screenshot is saved in [`screenshots/topology.webp`](screenshots/topology.webp). The `screenshots/` folder also has a checklist of evidence to capture from this capstone.
+The topology screenshot is saved in [`screenshots/topology.png`](screenshots/topology.png). The `screenshots/` folder also has a checklist of evidence to capture from this capstone.
 
 The current repository contains the project documentation and topology image. The Packet Tracer activity file and device configuration examples are not included yet; I’ll add the final lab file and sanitized configuration snapshots separately so they match this capstone and don’t expose passwords or secret hashes.
 
