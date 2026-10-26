@@ -8,7 +8,7 @@ The design connects a headquarters LAN, a branch LAN, and a simulated ISP. It br
 
 ![CCNA Mega Capstone topology](screenshots/topology.png)
 
-The diagram shows the main devices, VLANs, the HQ-to-branch connection, the ISP link, and the simulated public web server. The image is from the topology screenshot uploaded for this capstone.
+The diagram shows the main devices, VLANs, HQ-to-branch connection, ISP link, and simulated public web server. The original screenshot is stored in the repository under `screenshots/topology.png`.
 
 ## What I Implemented
 
@@ -187,9 +187,11 @@ More detail is available in [Verification and Troubleshooting](verification-and-
 
 ## Packet Tracer File and Project Evidence
 
-The topology screenshot is saved in [`screenshots/topology.png`](screenshots/topology.png). The `screenshots/` folder also has a checklist of evidence to capture from this capstone.
+The Packet Tracer lab file is included in this repository: **[`ccna-mega-capstone.pkt`](ccna-mega-capstone.pkt)**. Download it and open it in Cisco Packet Tracer to explore the topology, inspect the configurations, and repeat the tests described here. Keep a working copy before experimenting with changes.
 
-The current repository contains the project documentation and topology image. The Packet Tracer activity file and device configuration examples are not included yet; I’ll add the final lab file and sanitized configuration snapshots separately so they match this capstone and don’t expose passwords or secret hashes.
+The topology screenshot is saved in [`screenshots/topology.png`](screenshots/topology.png), and the [IP Addressing Plan](addressing-plan.md) and [Verification and Troubleshooting](verification-and-troubleshooting.md) pages document the design and the checks performed.
+
+The main project materials are now in place: the Packet Tracer file, topology image, README, addressing plan, and troubleshooting notes. Separate sanitized configuration snapshots and extra CLI evidence screenshots have not been added yet. Those would make the portfolio stronger, but the core lab and documentation are available now.
 
 ## What I Learned
 
@@ -199,7 +201,7 @@ The most useful habit was troubleshooting one layer at a time: checking the inte
 
 ## Next Steps
 
-I plan to keep using this topology to practise controlled failures and recovery. Next, I’ll add the current Packet Tracer activity file, capture the key verification outputs, and test the SSH management restriction from both allowed and disallowed sources.
+The core project is uploaded. My next improvement is to add a few focused pieces of evidence: the SSH management restriction working from an allowed source and failing from an unauthorized source, and a clearer NTP association check. I’ll keep the NTP limitation documented until the unusually large Packet Tracer offsets are understood.
 
 ## Author
 
