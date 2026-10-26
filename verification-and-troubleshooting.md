@@ -13,7 +13,7 @@ I kept these notes while building and checking the capstone. They record the tes
 | Public server network | R3 pinged `203.0.113.10` successfully | Verified |
 | NAT/PAT | R1 `show ip nat translations` screenshot showed TCP `192.168.40.10:1025` translated to `198.51.100.2:1025` for `203.0.113.10:80` | Verified for Branch Guest — CLI screenshot reviewed |
 | DNS/HTTP | `http://www.test.net` loaded from a client during testing | Verified for tested client |
-| Guest ACL placement | `guest` ACL is configured inbound on R2 `G0/0.40`; the reviewed `show access-lists guest` capture displays its rule set | Verified configuration; this output alone does not display the interface attachment |
+| Guest ACL placement | R2 `show ip interface g0/0.40` showed the interface up/up, helper address `192.168.100.10`, and `Inbound access list is guest` | Verified — interface CLI screenshot reviewed |
 | Guest ACL policy | R2 `show access-lists guest` screenshot showed DHCP, DNS, and public HTTP permit entries, denies for HQ Admin and management subnets, and a final `deny ip any any`; DHCP permit showed 5 matches | ACL configuration reviewed; the capture does not show an HTTP-rule hit count. Allowed/blocked end-to-end tests were previously reported by the user |
 | LACP | SW1-HQ `show etherchannel summary` showed `Po1(SU)`, protocol `LACP`, and member ports `Fa0/23(P)` and `Fa0/24(P)` | Verified — CLI screenshot reviewed |
 | HQ STP | SW1-HQ `show spanning-tree vlan 99` showed matching Root ID and Bridge ID and stated `This bridge is the root`; Gi0/1, Gi0/2, and Po1 were listed as designated forwarding | Verified for VLAN 99 — CLI screenshot reviewed; this output does not show the blocked port on a neighboring switch |
