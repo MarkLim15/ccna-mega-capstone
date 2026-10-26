@@ -6,9 +6,9 @@ I kept these notes while building and checking the capstone. They record the tes
 
 | Feature | Evidence / test | Status |
 |---|---|---|
-| R1–R2 OSPF | `show ip ospf neighbor` showed the neighbor in `FULL` state | Verified |
-| Internal routes | R1 learned Branch Staff and Guest routes; R2 learned HQ networks | Verified |
-| Default route | R2 showed an OSPF external default route via R1 | Verified |
+| R1–R2 OSPF | R2 `show ip ospf neighbor` showed neighbor ID `1.1.1.1`, state `FULL/BDR`, neighbor address `10.0.12.1`, interface `GigabitEthernet0/1` | Verified — CLI screenshot reviewed |
+| Internal routes | R2 `show ip route` showed OSPF routes for HQ Users (`192.168.10.0/24`), HQ Admin (`192.168.20.0/24`), HQ Management (`192.168.99.0/24`), and HQ Services (`192.168.100.0/24`), all via `10.0.12.1`; Branch Staff and Guest networks are directly connected | Verified — CLI screenshot reviewed |
+| Default route | R2 showed gateway of last resort `10.0.12.1` and `O*E2 0.0.0.0/0 [110/1]` via `10.0.12.1` | Verified — CLI screenshot reviewed |
 | R1 to ISP | R3 pinged `198.51.100.2` successfully | Verified |
 | Public server network | R3 pinged `203.0.113.10` successfully | Verified |
 | NAT/PAT | R1 translation showed `192.168.40.10` translated to `198.51.100.2` for HTTP to `203.0.113.10:80` | Verified for Branch Guest |
