@@ -64,9 +64,10 @@ I kept these notes while building and checking the capstone. They record what I 
 
 The switches were pointed to `192.168.100.10`. Several devices displayed the server as `* sys.peer`, but some Packet Tracer outputs showed an unusually large offset. I’ve recorded the server association as observed, but I’m not claiming accurate clock synchronization on every device until the offset is understood or Packet Tracer’s behavior is confirmed.
 
-## Screenshots and final evidence to add
+## Remaining evidence to capture
 
-- [ ] Full Packet Tracer topology with device labels visible
+- [x] Full Packet Tracer topology with device labels visible — saved as [`screenshots/topology.png`](screenshots/topology.png)
+- [x] Packet Tracer lab file — [`ccna-mega-capstone.pkt`](ccna-mega-capstone.pkt)
 - [ ] `show ip ospf neighbor` from R1 or R2
 - [ ] `show ip route` from R2 showing the default route
 - [ ] `show ip nat translations` on R1 during a public website test
@@ -76,4 +77,4 @@ The switches were pointed to `192.168.100.10`. Several devices displayed the ser
 - [ ] `show etherchannel summary` and `show spanning-tree vlan 99`
 - [ ] NTP association outputs after devices have had time to synchronize
 
-I’ll capture the evidence from this capstone’s actual Packet Tracer file so these screenshots match this project, not my older lab.
+Any additional screenshots should be captured from the included `ccna-mega-capstone.pkt` file so they match this project, not my older lab.
