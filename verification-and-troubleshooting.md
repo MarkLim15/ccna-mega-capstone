@@ -18,8 +18,8 @@ I kept these notes while building and checking the capstone. They record the tes
 | LACP | SW1-HQ `show etherchannel summary` showed `Po1(SU)`, protocol `LACP`, and member ports `Fa0/23(P)` and `Fa0/24(P)` | Verified — CLI screenshot reviewed |
 | HQ STP | SW1-HQ `show spanning-tree vlan 99` showed matching Root ID and Bridge ID and stated `This bridge is the root`; Gi0/1, Gi0/2, and Po1 were listed as designated forwarding | Verified for VLAN 99 — CLI screenshot reviewed; this output does not show the blocked port on a neighboring switch |
 | Switch management SVIs | SW1 `192.168.99.2`, SW2 `192.168.99.3`, SW3 `192.168.199.2` reached `up/up` | Verified |
-| SSH to R2 | Admin PC successfully connected to `10.0.12.2` after VTY corrections | Verified for R2 |
-| SSH source restriction | Management-source ACL was configured on device VTY lines | Configured; a separate allowed/denied source test on every device is recommended |
+| SSH access to R2 | PC-HQ-ADMIN successfully logged in to `10.0.12.2` and reached `R2>`; PC-HQ-USER received `Connection refused by remote host` for the same SSH destination | Verified for both tested source PCs — screenshots reviewed |
+| SSH source restriction | R2 accepted PC-HQ-ADMIN and refused PC-HQ-USER at `10.0.12.2` | Behavior supported on R2 for the two tested sources; equivalent source tests on other devices remain unverified |
 | NTP | Devices pointed to `192.168.100.10`; several showed it as `* sys.peer` | Server association observed; precise time synchronization is unconfirmed because of unusual Packet Tracer offsets |
 
 ## Troubleshooting notes
@@ -50,7 +50,7 @@ I kept these notes while building and checking the capstone. They record the tes
 
 **Fix:** VTY lines 0–15 were configured with `login local` and `transport input ssh`, and SSHv2 was enabled.
 
-**Verification:** `show ip ssh` reported version 2.0, and the Admin PC successfully connected to `10.0.12.2`.
+**Verification:** `show ip ssh` reported version 2.0, and the Admin PC successfully connected to `10.0.12.2`. In a separate source-restriction test, PC-HQ-ADMIN reached the R2 prompt, while PC-HQ-USER's attempt to the same address returned `Connection refused by remote host`.
 
 ### NAT/PAT source scope
 
@@ -72,7 +72,7 @@ The core deliverables are included in the repository: the [Packet Tracer file](c
 - Additional NAT/PAT tests for HQ Users, HQ Admin, and Branch Staff (Branch Guest translation is now evidenced by a reviewed CLI screenshot)
 - A Guest PC screenshot showing public HTTP succeeds and protected internal access is blocked; the CLI ACL screenshot documents the configured rules, but not the HTTP-rule hit count
 - STP output from SW2-HQ or the neighboring switch to document which redundant link is blocking for VLAN 99
-- SSH tests from an authorized source and an unauthorized source
+- Repeat SSH allow/deny tests on the remaining network devices; R2 has been tested from PC-HQ-ADMIN and PC-HQ-USER
 - NTP association output after allowing time to synchronize
 
 Any added screenshots should come from the included `ccna-mega-capstone.pkt` file so they match this project.
