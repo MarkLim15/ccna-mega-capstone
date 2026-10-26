@@ -33,7 +33,7 @@ The lab has a headquarters network, a branch network, and a simulated ISP. I als
 
 ## Network overview
 
-![Completed Cisco Packet Tracer topology](screenshots/topology.webp)
+![Completed Cisco Packet Tracer topology](screenshots/topology.png)
 
 *Topology screenshot captured from the current capstone lab.*
 
