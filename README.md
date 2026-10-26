@@ -111,7 +111,7 @@ R1-HQ performs PAT for the client subnets:
 - `192.168.30.0/24` — Branch Staff
 - `192.168.40.0/24` — Branch Guest
 
-The inside-global address is R1's ISP-facing address, `198.51.100.2`. During testing, the NAT table showed Branch Guest traffic from `192.168.40.10` translated to `198.51.100.2` while accessing PUBLIC-WEB at `203.0.113.10` over HTTP. The client was also able to load `http://www.test.net`.
+The inside-global address is R1's ISP-facing address, `198.51.100.2`. In the reviewed `show ip nat translations` screenshot, Branch Guest traffic from `192.168.40.10:1025` was translated to `198.51.100.2:1025` while accessing PUBLIC-WEB at `203.0.113.10:80` over TCP/HTTP. The client was also able to load `http://www.test.net` during a separate client test.
 
 ## Verification
 
@@ -140,7 +140,8 @@ What I observed during the lab:
 - R2's `show ip route` output showed OSPF-learned HQ routes for `192.168.10.0/24`, `192.168.20.0/24`, `192.168.99.0/24`, and `192.168.100.0/24` via `10.0.12.1`.
 - R2's routing table identified `10.0.12.1` as the gateway of last resort and showed `O*E2 0.0.0.0/0 [110/1]` via that next hop.
 - R3 could reach R1's ISP-facing address and PUBLIC-WEB.
-- R1 showed a NAT translation for Guest HTTP traffic to the public server.
+- The reviewed R1 `show ip nat translations` screenshot showed `192.168.40.10:1025` translated to `198.51.100.2:1025` for TCP traffic to `203.0.113.10:80`.
+- The reviewed R2 `show access-lists guest` output showed DHCP, DNS, and public HTTP permits plus denies for the HQ Admin, HQ Management, and Branch Management subnets, followed by `deny ip any any`; the DHCP permit displayed five matches. The screenshot did not show an HTTP-rule hit count.
 - `http://www.test.net` loaded during a client test.
 - The HQ LACP EtherChannel formed, and STP handled the redundant Layer 2 path.
 - The switch management SVIs reached `up/up` and could ping their gateways.
