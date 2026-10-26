@@ -136,8 +136,9 @@ show ip ssh
 
 What I observed during the lab:
 
-- R1 and R2 formed an OSPF neighbor relationship in the `FULL` state.
-- R2 learned the HQ routes and the default route through OSPF.
+- R2's `show ip ospf neighbor` output showed neighbor ID `1.1.1.1` in `FULL/BDR` state at `10.0.12.1` on `GigabitEthernet0/1`.
+- R2's `show ip route` output showed OSPF-learned HQ routes for `192.168.10.0/24`, `192.168.20.0/24`, `192.168.99.0/24`, and `192.168.100.0/24` via `10.0.12.1`.
+- R2's routing table identified `10.0.12.1` as the gateway of last resort and showed `O*E2 0.0.0.0/0 [110/1]` via that next hop.
 - R3 could reach R1's ISP-facing address and PUBLIC-WEB.
 - R1 showed a NAT translation for Guest HTTP traffic to the public server.
 - `http://www.test.net` loaded during a client test.
