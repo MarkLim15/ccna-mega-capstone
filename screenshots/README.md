@@ -1,10 +1,9 @@
 # Capstone Screenshots
 
-I’ll add screenshots captured from the final version of this Packet Tracer capstone here. I’m keeping the evidence for this project separate from screenshots for my older enterprise-network lab.
+The topology screenshot for this capstone is now saved as [`topology.png`](topology.png). I’ll keep adding evidence captured from this same Packet Tracer lab here, separate from screenshots for my older enterprise-network project.
 
-Planned evidence:
+## Remaining verification screenshots
 
-- [ ] Full topology with device names and links visible
 - [ ] R1/R2 OSPF neighbor state and learned routes
 - [ ] NAT/PAT translation during a client HTTP test
 - [ ] Guest PC reaching the public website
@@ -12,6 +11,6 @@ Planned evidence:
 - [ ] EtherChannel and spanning-tree status
 - [ ] Successful SSH from the HQ Admin PC
 - [ ] Failed SSH test from an unauthorized source
-- [ ] NTP association output, with any simulator offset limitations noted
+- [ ] NTP association output, with simulator offset limitations noted
 
-Screenshots should show enough of the Packet Tracer or CLI window to make the test clear. I’ll avoid including passwords or other sensitive details in images.
+Screenshots should show enough of the Packet Tracer or CLI window to make each test clear. I’ll avoid including passwords, secret hashes, or other sensitive details.
