@@ -100,7 +100,7 @@ The goal is to let guests get an address, resolve the public hostname, and brows
 
 SSHv2 and local authentication are configured on the network devices. The intended management source is the HQ Admin subnet `192.168.20.0/24`.
 
-I verified an SSH connection from the HQ Admin PC to R2's transit address `10.0.12.2` after correcting the VTY configuration. The SSH source restriction should still be tested from both an authorized and an unauthorized source on every device before calling that policy fully validated.
+I tested the SSH source restriction on R2 using the same destination (`10.0.12.2`) from two PCs: PC-HQ-ADMIN reached the `R2>` prompt after login, while PC-HQ-USER received `Connection refused by remote host`. This supports the intended source restriction on R2 for these two tests. The equivalent allow/deny tests have not been captured for every other network device, so I am not claiming the restriction is fully validated across all devices.
 
 ## NAT/PAT and Simulated Internet
 
@@ -146,7 +146,7 @@ What I observed during the lab:
 - SW1-HQ's `show etherchannel summary` output showed `Po1(SU)` using LACP, with `Fa0/23(P)` and `Fa0/24(P)` bundled in the port-channel.
 - SW1-HQ's `show spanning-tree vlan 99` output identified SW1-HQ as the root bridge for VLAN 99. The listed interfaces were in designated-forwarding state; this output does not identify a blocked port on a neighboring switch.
 - The switch management SVIs reached `up/up` and could ping their gateways.
-- SSH to R2 worked from the HQ Admin PC after its VTY settings were corrected.
+- SSH to R2 succeeded from PC-HQ-ADMIN; the same SSH attempt from PC-HQ-USER was refused by the remote host, supporting R2's management-source restriction for these tested sources.
 
 The core lab has been built and the main connectivity tests described above were performed. I’m keeping two technical caveats clear rather than overstating the results: the SSH connection to R2 was tested successfully, but the SSH source restriction was not tested from both allowed and unauthorized clients on every device; and although several devices selected SRV-HQ as their NTP peer, some Packet Tracer offsets were unusually large, so accurate time synchronization is not confirmed. These are optional follow-up validation items, not missing project files.
 
