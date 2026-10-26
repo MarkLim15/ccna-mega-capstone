@@ -15,8 +15,8 @@ I kept these notes while building and checking the capstone. They record the tes
 | DNS/HTTP | `http://www.test.net` loaded from a client during testing | Verified for tested client |
 | Guest ACL placement | `guest` ACL is configured inbound on R2 `G0/0.40`; the reviewed `show access-lists guest` capture displays its rule set | Verified configuration; this output alone does not display the interface attachment |
 | Guest ACL policy | R2 `show access-lists guest` screenshot showed DHCP, DNS, and public HTTP permit entries, denies for HQ Admin and management subnets, and a final `deny ip any any`; DHCP permit showed 5 matches | ACL configuration reviewed; the capture does not show an HTTP-rule hit count. Allowed/blocked end-to-end tests were previously reported by the user |
-| LACP | `show etherchannel summary` showed `Po1(SU)` and Fa0/23 and Fa0/24 bundled | Verified |
-| HQ STP | SW1 was root for HQ VLANs; redundant path blocked where appropriate | Verified |
+| LACP | SW1-HQ `show etherchannel summary` showed `Po1(SU)`, protocol `LACP`, and member ports `Fa0/23(P)` and `Fa0/24(P)` | Verified — CLI screenshot reviewed |
+| HQ STP | SW1-HQ `show spanning-tree vlan 99` showed matching Root ID and Bridge ID and stated `This bridge is the root`; Gi0/1, Gi0/2, and Po1 were listed as designated forwarding | Verified for VLAN 99 — CLI screenshot reviewed; this output does not show the blocked port on a neighboring switch |
 | Switch management SVIs | SW1 `192.168.99.2`, SW2 `192.168.99.3`, SW3 `192.168.199.2` reached `up/up` | Verified |
 | SSH to R2 | Admin PC successfully connected to `10.0.12.2` after VTY corrections | Verified for R2 |
 | SSH source restriction | Management-source ACL was configured on device VTY lines | Configured; a separate allowed/denied source test on every device is recommended |
@@ -71,7 +71,7 @@ The core deliverables are included in the repository: the [Packet Tracer file](c
 - `show ip ospf neighbor` and `show ip route` from R1/R2
 - Additional NAT/PAT tests for HQ Users, HQ Admin, and Branch Staff (Branch Guest translation is now evidenced by a reviewed CLI screenshot)
 - A Guest PC screenshot showing public HTTP succeeds and protected internal access is blocked; the CLI ACL screenshot documents the configured rules, but not the HTTP-rule hit count
-- `show etherchannel summary` and `show spanning-tree vlan 99`
+- STP output from SW2-HQ or the neighboring switch to document which redundant link is blocking for VLAN 99
 - SSH tests from an authorized source and an unauthorized source
 - NTP association output after allowing time to synchronize
 
