@@ -143,7 +143,8 @@ What I observed during the lab:
 - The reviewed R1 `show ip nat translations` screenshot showed `192.168.40.10:1025` translated to `198.51.100.2:1025` for TCP traffic to `203.0.113.10:80`.
 - The reviewed R2 `show access-lists guest` output showed DHCP, DNS, and public HTTP permits plus denies for the HQ Admin, HQ Management, and Branch Management subnets, followed by `deny ip any any`; the DHCP permit displayed five matches. The screenshot did not show an HTTP-rule hit count.
 - `http://www.test.net` loaded during a client test.
-- The HQ LACP EtherChannel formed, and STP handled the redundant Layer 2 path.
+- SW1-HQ's `show etherchannel summary` output showed `Po1(SU)` using LACP, with `Fa0/23(P)` and `Fa0/24(P)` bundled in the port-channel.
+- SW1-HQ's `show spanning-tree vlan 99` output identified SW1-HQ as the root bridge for VLAN 99. The listed interfaces were in designated-forwarding state; this output does not identify a blocked port on a neighboring switch.
 - The switch management SVIs reached `up/up` and could ping their gateways.
 - SSH to R2 worked from the HQ Admin PC after its VTY settings were corrected.
 
