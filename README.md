@@ -150,6 +150,23 @@ What I observed during the lab:
 
 The core lab has been built and the main connectivity tests described above were performed. I’m keeping two technical caveats clear rather than overstating the results: the SSH connection to R2 was tested successfully, but the SSH source restriction was not tested from both allowed and unauthorized clients on every device; and although several devices selected SRV-HQ as their NTP peer, some Packet Tracer offsets were unusually large, so accurate time synchronization is not confirmed. These are optional follow-up validation items, not missing project files.
 
+## Evidence Screenshots
+
+These screenshots provide supporting CLI and client-side evidence for the checks described above.
+
+| Area | Evidence |
+|---|---|
+| OSPF neighbor | [OSPF_NEIGHBOR.png](screenshots/OSPF_NEIGHBOR.png) |
+| Learned routes and default route | [IP_ROUTE.png](screenshots/IP_ROUTE.png) |
+| NAT/PAT translation | [NAT_translation.png](screenshots/NAT_translation.png) |
+| Guest ACL rules | [Access-list.png](screenshots/Access-list.png) |
+| Guest ACL inbound attachment | [R2_int_g0_0.40.png](screenshots/R2_int_g0_0.40.png) |
+| Public web page from Guest PC | [test_net.png](screenshots/test_net.png) |
+| EtherChannel status | [sw1 etherchannel.png](screenshots/sw1%20etherchannel.png) |
+| STP root status for VLAN 99 | [STP_vlan99_sw1.png](screenshots/STP_vlan99_sw1.png) |
+| SSH allowed from HQ Admin | [HQ_admin_ssh.png](screenshots/HQ_admin_ssh.png) |
+| SSH refused from HQ User | [HQ_User_ssh.png](screenshots/HQ_User_ssh.png) |
+
 ## Troubleshooting Notes
 
 ### 1. Native VLAN mismatch between the HQ switches
@@ -194,7 +211,7 @@ The Packet Tracer lab file is included in this repository: **[`ccna-mega-capston
 
 The topology screenshot is saved in [`screenshots/topology.png`](screenshots/topology.png), and the [IP Addressing Plan](addressing-plan.md) and [Verification and Troubleshooting](verification-and-troubleshooting.md) pages document the design and the checks performed.
 
-The core project package is complete: the Packet Tracer file, topology image, README, addressing plan, and troubleshooting notes are all included. Separate sanitized configuration snapshots and additional CLI screenshots are optional supporting materials; they are not required to understand the design or open the lab.
+The core project package is complete: the Packet Tracer file, topology image, README, addressing plan, troubleshooting notes, and supporting CLI/client screenshots are included. Separate sanitized configuration snapshots remain optional.
 
 ## What I Learned
 
@@ -204,7 +221,7 @@ The most useful habit was troubleshooting one layer at a time: checking the inte
 
 ## Optional Improvements
 
-If I expand the portfolio later, useful additions would be screenshots showing the SSH management restriction from both allowed and unauthorized sources, plus a clearer NTP association check. The current NTP caveat will remain documented unless the unusually large Packet Tracer offsets can be explained.
+Useful follow-up checks would be to repeat SSH source-restriction tests on the remaining devices and capture a clearer NTP association result. R2's authorized and unauthorized SSH tests are included in the evidence screenshots. The NTP caveat will remain documented unless the unusually large Packet Tracer offsets can be explained.
 
 ## Author
 

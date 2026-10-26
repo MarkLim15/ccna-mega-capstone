@@ -1,15 +1,18 @@
-# Project Screenshots
+# Evidence Screenshots
 
-The topology diagram is included here: [`topology.png`](topology.png).
+The topology diagram is included as [`topology.png`](topology.png). The other images below are screenshots captured from the Packet Tracer lab and referenced by the main [README](../README.md) and [Verification and Troubleshooting](../verification-and-troubleshooting.md).
 
-## CLI evidence record
+| File | What it shows |
+|---|---|
+| [OSPF_NEIGHBOR.png](OSPF_NEIGHBOR.png) | R2-BRANCH OSPF adjacency in `FULL/BDR` state |
+| [IP_ROUTE.png](IP_ROUTE.png) | HQ routes learned via OSPF and OSPF external default route |
+| [NAT_translation.png](NAT_translation.png) | Branch Guest TCP traffic translated by PAT toward PUBLIC-WEB |
+| [Access-list.png](Access-list.png) | Configured Guest ACL permit and deny rules |
+| [R2_int_g0_0.40.png](R2_int_g0_0.40.png) | Guest ACL attached inbound on R2 `GigabitEthernet0/0.40` |
+| [test_net.png](test_net.png) | Guest PC browser displaying `http://www.test.net` |
+| [sw1 etherchannel.png](sw1%20etherchannel.png) | SW1-HQ LACP EtherChannel member ports bundled |
+| [STP_vlan99_sw1.png](STP_vlan99_sw1.png) | SW1-HQ identified as root for VLAN 99 |
+| [HQ_admin_ssh.png](HQ_admin_ssh.png) | SSH login succeeds from PC-HQ-ADMIN |
+| [HQ_User_ssh.png](HQ_User_ssh.png) | SSH connection is refused from PC-HQ-USER |
 
-The CLI screenshots reviewed during the capstone were used to update the verification record. The confirmed results are documented in [`verification-and-troubleshooting.md`](../verification-and-troubleshooting.md), including:
-
-- R2-BRANCH OSPF neighbor state, learned HQ routes, and OSPF-learned default route
-- R1-HQ NAT/PAT translation for Branch Guest HTTP traffic
-- R2-BRANCH Guest ACL rules and inbound attachment to `GigabitEthernet0/0.40`
-- SW1-HQ LACP EtherChannel status and STP root status for VLAN 99
-- SSH success from PC-HQ-ADMIN and refusal from PC-HQ-USER
-
-The repository currently stores the topology image as a separate image file; the additional CLI captures are represented by their verified findings in the documentation rather than committed as individual image files. The verification notes distinguish directly reviewed output from tests previously reported and from checks that remain unverified.
+The verification notes distinguish directly reviewed screenshot results from tests previously reported and from checks that remain unverified.
